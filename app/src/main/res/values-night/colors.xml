@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--主题颜色-->
+    <color name="topic">#FF957BCD</color>
+    <color name="statuabar">#FF333333</color>
+    <!--页面背景颜色-->
+    <color name="bg_page">#FF333333</color>
+</resources>
