@@ -2,7 +2,7 @@ package com.pownpon.hua
 
 import android.app.Application
 
-class App: Application() {
+class AppHua: Application() {
 
     override fun onCreate() {
         super.onCreate()
