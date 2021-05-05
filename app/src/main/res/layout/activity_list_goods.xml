@@ -12,10 +12,25 @@
         android:layout_height="match_parent"
         tools:context=".activity.ListGoodsActivity">
 
-        <ImageView
-            android:src="@mipmap/icon"
+        <com.pownpon.ui.smartrefresh.SmartRefreshLayout
+            android:id="@+id/smart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+
+            <com.pownpon.ui.smartrefresh.header.material.MaterialHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Hello World!"/>
+
+            <com.pownpon.ui.smartrefresh.footer.ball.BallPulseFooter
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </com.pownpon.ui.smartrefresh.SmartRefreshLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

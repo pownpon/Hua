@@ -9,25 +9,25 @@ import androidx.databinding.ViewDataBinding
 import com.pownpon.hua.activity.LoginActivity
 import com.pownpon.hua.global.App
 
-abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity<VDB : ViewDataBinding> : AppCompatActivity() {
 
     /* -------------------    成员变量  -------------- */
 
     /**
      * 绑定视图数据
      */
-    protected lateinit var mVDb: DB
+    protected lateinit var mVDB: VDB
 
     /* -------------------    重写父类的方法区域  -------------- */
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mVDb = DataBindingUtil.setContentView(this, getLayoutId())
+        mVDB = DataBindingUtil.setContentView(this, getLayoutId())
 
         //先进行不需要登录就可进行的初始化
         initBeforeLogin()
         //在需要进行登录，并且已经登录的前提下进行需要登录后的初始化
         if (needLogin() ) {
-            if(App.LoginStatus){
+            if(App.isLogin()){
                 initAfterLogin()
             }else{
                 goActivity(LoginActivity::class.java)

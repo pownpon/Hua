@@ -13,7 +13,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun initBeforeLogin() {
-        mVDb.tvActMainStart.setOnClickListener(object : NoDoubleClickListener() {
+        mVDB.tvActMainStart.setOnClickListener(object : NoDoubleClickListener() {
             override fun click(v: View?) {
                 goActivity(ListGoodsActivity::class.java)
             }
