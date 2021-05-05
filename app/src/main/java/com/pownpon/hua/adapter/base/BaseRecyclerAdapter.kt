@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.pownpon.hua.`interface`.IData
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 
 /**
  * Copyright (C), 2021-2030, XXX有限公司
@@ -55,15 +57,12 @@ class BaseRecyclerAdapter<T, VDB : ViewDataBinding>(
 
     override fun onBindViewHolder(holder: BaseViewHolder<ViewDataBinding>, position: Int) {
         var dataBinding = holder.mVDB
-        if (null == dataBinding || dataBinding.javaClass != getType(dataBinding)) {
-            return
-        }
-        var x = ViewDataBinding::class.java
+//        if (null == dataBinding || dataBinding.ty != getType().typeName) {
+//            return
+//        }
     }
 
-    inline fun <reified X> getType(xxx: X): Class<*> {
-        return X::class.java
-    }
+
 
     override fun getItemViewType(position: Int): Int {
         return if (mHasHead && 0 == position) {
