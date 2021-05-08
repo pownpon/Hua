@@ -6,6 +6,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
+    <color name="translucent">#80000000</color>
+    <color name="translucent_light">#33000000</color>
     <!--页面背景颜色-->
     <color name="bg_page">#FFF3F3F3</color>
 

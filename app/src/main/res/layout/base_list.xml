@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="isLoading"
+            type="Boolean" />
+
+        <variable
+            name="isNoData"
+            type="Boolean" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_nodata_base_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableTop="@mipmap/icon"
+            android:drawablePadding="30dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="50dp"
+            android:text="没有找到相关数据"
+            android:visibility="@{isNoData?View.VISIBLE:View.GONE}" />
+
+        <!--        列表层-->
+        <com.pownpon.ui.smartrefresh.SmartRefreshLayout
+            android:id="@+id/smart_refresh_base_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.pownpon.ui.smartrefresh.header.material.MaterialHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_base_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:visibility="@{isNoData?View.INVISIBLE:View.VISIBLE}" />
+
+        </com.pownpon.ui.smartrefresh.SmartRefreshLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_content_base_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--        加载防触摸层-->
+        <FrameLayout
+            android:id="@+id/fl_touch_base_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/translucent_light"
+            android:clickable="false"
+            android:visibility="@{isLoading?View.VISIBLE:View.GONE}"></FrameLayout>
+
+
+    </FrameLayout>
+</layout>

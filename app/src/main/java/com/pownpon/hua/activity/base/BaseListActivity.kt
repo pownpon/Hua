@@ -1,16 +1,28 @@
 package com.pownpon.hua.activity.base
 
 import android.view.LayoutInflater
-import android.view.View
+import android.widget.FrameLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.recyclerview.widget.ConcatAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.pownpon.hua.R
-import com.pownpon.hua.databinding.ActivityBaseListBinding
+import com.pownpon.hua.adapter.LoadStateFootAdapter
+import com.pownpon.hua.adapter.base.BasePageDataAdapter
+import com.pownpon.hua.bean.base.BaseEntity
+import com.pownpon.hua.databinding.BaseListBinding
+import com.pownpon.hua.global.lc
 import com.pownpon.ui.smartrefresh.api.RefreshLayout
-import com.pownpon.ui.smartrefresh.listener.OnRefreshLoadMoreListener
+import com.pownpon.ui.smartrefresh.listener.OnRefreshListener
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-abstract class BaseListActivity<VDB : ViewDataBinding> : BaseActivity<ActivityBaseListBinding>(),
-    OnRefreshLoadMoreListener {
+abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB : ViewDataBinding> :
+    BaseActivity<BaseListBinding>(),
+    OnRefreshListener {
 
     /**
      * 上层布局数据绑定
@@ -18,24 +30,17 @@ abstract class BaseListActivity<VDB : ViewDataBinding> : BaseActivity<ActivityBa
     protected lateinit var mVDBList: VDB
 
     /**
-     * 是否正在刷新
+     * 是否正在加载数据中
      */
-    private var mIsRefreshing = false
+    private var mIsDataLoading = false
 
-    /**
-     * 是否正在加载更多
-     */
-    private var mIsLoading = false
+    protected lateinit var mAdapter: BasePageDataAdapter<T, ItemVDB>
 
-    /**
-     * 当前页面
-     */
-    private var mPage = 1
-
+    protected lateinit var mManager: RecyclerView.LayoutManager
 
 
     final override fun getLayoutId(): Int {
-        return R.layout.activity_base_list
+        return R.layout.base_list
     }
 
     final override fun initBeforeLogin() {
@@ -43,82 +48,131 @@ abstract class BaseListActivity<VDB : ViewDataBinding> : BaseActivity<ActivityBa
         mVDBList = DataBindingUtil.inflate(
             LayoutInflater.from(BaseListActivity@ this),
             getTopLayoutId(),
-            mVDB.flContentActBaseList,
+            mVDB.clContentBaseList,
             true
         )
-        //刷新监听
-        mVDB.smartRefreshActBaseList.setOnRefreshLoadMoreListener(BaseListActivity@ this)
-        //防触摸层设置
-        mVDB.flTouchActBaseList.isEnabled =false
-        mVDB.flTouchActBaseList.visibility = View.GONE
+        //设置刷新可用
+        mVDB.smartRefreshBaseList.setEnableRefresh(true)
+        mVDB.smartRefreshBaseList.setEnableLoadMore(false)
+
+        //recyclerview设置
+        mManager = initManager()
+        mVDB.rvBaseList.layoutManager = mManager
+        mAdapter = initAdapter()
+        var concatAdapter: ConcatAdapter =
+            mAdapter.withLoadStateFooter(LoadStateFootAdapter(BaseListActivity@ this) { mAdapter.retry() })
+        concatTopAdadpter(concatAdapter)
+        mVDB.rvBaseList.adapter = concatAdapter
+
+        initUI()
+
+        registListener()
 
         //加载子类的最上层布局
         initTopLayout()
-        //加载一次数据
-        refreshData()
+    }
+
+    /**
+     * 控件初始化
+     */
+    private fun initUI() {
+        //防触摸
+        mVDB.flTouchBaseList.isEnabled = true
+        mVDB.flTouchBaseList.isClickable = true
+        mVDB.flTouchBaseList.setOnTouchListener { _, _ -> true }
+
+        //重新设置列表控件的高度
+        var lpSmartRefresh: FrameLayout.LayoutParams =
+            mVDB.smartRefreshBaseList.layoutParams as FrameLayout.LayoutParams
+        lpSmartRefresh.topMargin = getTitleHeight()
+        mVDB.smartRefreshBaseList.layoutParams = lpSmartRefresh
+
+        var lpTvNoData: FrameLayout.LayoutParams =
+            mVDB.tvNodataBaseList.layoutParams as FrameLayout.LayoutParams
+        lpTvNoData.topMargin = getTitleHeight()
+        mVDB.tvNodataBaseList.layoutParams = lpTvNoData
+
+
+    }
+
+    /**
+     * 设置监听
+     */
+    private fun registListener() {
+        //刷新监听
+        mVDB.smartRefreshBaseList.setOnRefreshListener(BaseListActivity@ this)
+        //adapter加载状态监听
+        mAdapter.addLoadStateListener {
+            /*
+             * CombinedLoadStates 中成员变量
+             * refresh 表示刷新的状态
+             * prepend 表示往前页加载的状态
+             * append  表示往后页加载的状态
+             * 这三个状态中的（即LoadState类中的属性）endOfPaginationReached表示是否分页结束，即是否已经加载完成
+             *
+             * source  当数据是从PagingSource加载过来时，不为空，并且其内部状态与上述三个状态完全一致
+             * mediator 当数据是从RemoteMediator（媒体库）加载时，不为空，并且其内部状态与上述三个状态完全一致
+             *
+             * refresh/prepend/append 状态有三个值，
+             * NotLoading   没有加载中，即什么都没干
+             * Loading      正在加载数据中
+             * Error        加载数据出现错误
+             *
+             */
+
+            //加载完成
+            if (it.refresh is LoadState.NotLoading || it.refresh is LoadState.Error) {
+                mVDB.smartRefreshBaseList.finishRefresh()
+            }
+
+            //当刷新/前加/后加 任一状态是加载中时，即正在加载数据中
+            mIsDataLoading =
+                it.refresh is LoadState.Loading || it.prepend is LoadState.Loading || it.append is LoadState.Loading
+            setTouchLayoutVisible(mIsDataLoading)
+
+            var isNoData = it.refresh is LoadState.Error
+            mVDB.isNoData = isNoData
+        }
+
     }
 
     /*————————————————————————————————刷新监听——————————————————————————————————————————*/
+
     final override fun onRefresh(refreshLayout: RefreshLayout) {
-        //防触摸
-        mVDB.flTouchActBaseList.visibility = View.VISIBLE
-        //正在刷新中
-        mIsRefreshing =true
-        //加载数据
-        mPage = 1
-        onRefreshData(mPage)
+        //刷新数据
+        mAdapter.refresh()
     }
 
-    final override fun onLoadMore(refreshLayout: RefreshLayout) {
-        //防触摸
-        mVDB.flTouchActBaseList.visibility = View.VISIBLE
-        //正在刷新中
-        mIsLoading =true
-        //加载数据
-        onLoadMoreData((++mPage))
-    }
     /*————————————————————————————————给子类调用的方法——————————————————————————————————————————*/
-
-    /**
-     * 当加载数据完成
-     */
-    protected fun onRefreshLoadMoreComplete() {
-        mVDB.smartRefreshActBaseList.finishRefresh()
-        mVDB.smartRefreshActBaseList.finishLoadMore()
-        //刷新加载完成
-        mIsRefreshing =false
-        mIsLoading = false
-        //可触摸
-        mVDB.flTouchActBaseList.visibility = View.GONE
-    }
 
     /**
      * 刷新数据
      */
-    protected fun refreshData(){
-        mVDB.smartRefreshActBaseList.autoRefresh()
+    protected fun refreshData() {
+        mVDB.smartRefreshBaseList.autoRefresh()
     }
 
     /**
-     * 加载更多数据
+     * 获取是否正在加载数据
      */
-    protected fun loadMoreData(){
-        mVDB.smartRefreshActBaseList.autoLoadMore()
+    protected fun isDataLoading(): Boolean {
+        return mIsDataLoading
     }
 
     /**
-     * 获取是否正在刷新
+     * 设置防触摸层是否可见
      */
-    protected fun isRefreshing():Boolean{
-        return mIsRefreshing
+    protected fun setTouchLayoutVisible(visible: Boolean) {
+        mVDB.isLoading = visible
     }
 
     /**
-     * 获取是否正在加载更多
+     * 组合adapter
      */
-    protected fun isLoading():Boolean{
-        return mIsLoading
+    protected open fun concatTopAdadpter(concatAdapter: ConcatAdapter) {
+
     }
+
 
     /*———————————————————————————————必须重写的方法——————————————————————————————————————————*/
 
@@ -128,17 +182,22 @@ abstract class BaseListActivity<VDB : ViewDataBinding> : BaseActivity<ActivityBa
     abstract fun getTopLayoutId(): Int
 
     /**
-     * 加载上层布局
+     * 获取recyclerview的顶部距离
+     */
+    abstract fun getTitleHeight(): Int
+
+    /**
+     * 初始化上层布局
      */
     abstract fun initTopLayout()
 
     /**
-     * 刷新数据
+     * 初始化适配器
      */
-    abstract fun onRefreshData(page:Int)
+    abstract fun initAdapter(): BasePageDataAdapter<T, ItemVDB>
 
     /**
-     * 加载更多数据
+     * 初始化布局管理器
      */
-    abstract fun onLoadMoreData(page: Int)
+    abstract fun initManager(): RecyclerView.LayoutManager
 }

@@ -7,30 +7,33 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.ListGoodsActivity">
 
-        <com.pownpon.ui.smartrefresh.SmartRefreshLayout
-            android:id="@+id/smart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_test1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:background="#369159"
+            android:padding="10dp"
+            android:text="111111111"
+            android:textSize="20sp" />
 
-            <com.pownpon.ui.smartrefresh.header.material.MaterialHeader
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tv_test2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:background="#369159"
+            android:padding="10dp"
+            android:text="222222"
+            android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Hello World!"/>
-
-            <com.pownpon.ui.smartrefresh.footer.ball.BallPulseFooter
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </com.pownpon.ui.smartrefresh.SmartRefreshLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 </layout>

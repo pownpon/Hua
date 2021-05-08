@@ -3,11 +3,13 @@ package com.pownpon.hua.activity.base
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.pownpon.hua.activity.LoginActivity
 import com.pownpon.hua.global.App
+import com.pownpon.util.ClazzUtil
 
 abstract class BaseActivity<VDB : ViewDataBinding> : AppCompatActivity() {
 
@@ -22,7 +24,7 @@ abstract class BaseActivity<VDB : ViewDataBinding> : AppCompatActivity() {
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mVDB = DataBindingUtil.setContentView(this, getLayoutId())
-
+        mVDB.lifecycleOwner = this
         //先进行不需要登录就可进行的初始化
         initBeforeLogin()
         //在需要进行登录，并且已经登录的前提下进行需要登录后的初始化

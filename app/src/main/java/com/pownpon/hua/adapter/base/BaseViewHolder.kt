@@ -3,6 +3,7 @@ package com.pownpon.hua.adapter.base
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
@@ -15,16 +16,18 @@ import androidx.recyclerview.widget.RecyclerView
  * Description:
  * History:
  */
-class BaseViewHolder<VDB : ViewDataBinding>(itemView:View) : RecyclerView.ViewHolder(itemView) {
+class BaseViewHolder<VDB : ViewDataBinding>(val mVDB: VDB) :
 
-    public var mVDB:VDB? = null
+    RecyclerView.ViewHolder(mVDB.root) {
 
-    constructor(vdb:VDB):this(vdb.root){
-        this.mVDB = vdb
-    }
     constructor(
         context: Context,
         layoutResId: Int
-    ) : this(DataBindingUtil.inflate<VDB>(LayoutInflater.from(context), layoutResId, null, false))
+    ) : this(context,layoutResId,null)
 
+    constructor(
+        context: Context,
+        layoutResId: Int,
+        parent:ViewGroup?
+    ) : this(DataBindingUtil.inflate<VDB>(LayoutInflater.from(context), layoutResId, parent, false))
 }
