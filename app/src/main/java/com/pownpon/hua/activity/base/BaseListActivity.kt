@@ -4,25 +4,20 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.pownpon.hua.R
 import com.pownpon.hua.adapter.LoadStateFootAdapter
 import com.pownpon.hua.adapter.base.BasePageDataAdapter
 import com.pownpon.hua.bean.base.BaseEntity
 import com.pownpon.hua.databinding.BaseListBinding
-import com.pownpon.hua.global.lc
-import com.pownpon.ui.smartrefresh.api.RefreshLayout
-import com.pownpon.ui.smartrefresh.listener.OnRefreshListener
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB : ViewDataBinding> :
     BaseActivity<BaseListBinding>(),
-    OnRefreshListener {
+    SwipeRefreshLayout.OnRefreshListener {
 
     /**
      * 上层布局数据绑定
@@ -51,9 +46,6 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
             mVDB.clContentBaseList,
             true
         )
-        //设置刷新可用
-        mVDB.smartRefreshBaseList.setEnableRefresh(true)
-        mVDB.smartRefreshBaseList.setEnableLoadMore(false)
 
         //recyclerview设置
         mManager = initManager()
@@ -76,6 +68,8 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
      * 控件初始化
      */
     private fun initUI() {
+        mVDB.srlBaseList.setColorSchemeResources(R.color.topic,R.color.topic_2)
+        mVDB.srlBaseList.setProgressBackgroundColorSchemeResource(R.color.white)
         //防触摸
         mVDB.flTouchBaseList.isEnabled = true
         mVDB.flTouchBaseList.isClickable = true
@@ -83,16 +77,14 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
 
         //重新设置列表控件的高度
         var lpSmartRefresh: FrameLayout.LayoutParams =
-            mVDB.smartRefreshBaseList.layoutParams as FrameLayout.LayoutParams
+            mVDB.srlBaseList.layoutParams as FrameLayout.LayoutParams
         lpSmartRefresh.topMargin = getTitleHeight()
-        mVDB.smartRefreshBaseList.layoutParams = lpSmartRefresh
+        mVDB.srlBaseList.layoutParams = lpSmartRefresh
 
         var lpTvNoData: FrameLayout.LayoutParams =
             mVDB.tvNodataBaseList.layoutParams as FrameLayout.LayoutParams
         lpTvNoData.topMargin = getTitleHeight()
         mVDB.tvNodataBaseList.layoutParams = lpTvNoData
-
-
     }
 
     /**
@@ -100,7 +92,7 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
      */
     private fun registListener() {
         //刷新监听
-        mVDB.smartRefreshBaseList.setOnRefreshListener(BaseListActivity@ this)
+        mVDB.srlBaseList.setOnRefreshListener(BaseListActivity@ this)
         //adapter加载状态监听
         mAdapter.addLoadStateListener {
             /*
@@ -122,7 +114,7 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
 
             //加载完成
             if (it.refresh is LoadState.NotLoading || it.refresh is LoadState.Error) {
-                mVDB.smartRefreshBaseList.finishRefresh()
+                mVDB.srlBaseList.isRefreshing = false
             }
 
             //当刷新/前加/后加 任一状态是加载中时，即正在加载数据中
@@ -138,7 +130,7 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
 
     /*————————————————————————————————刷新监听——————————————————————————————————————————*/
 
-    final override fun onRefresh(refreshLayout: RefreshLayout) {
+    final override fun onRefresh() {
         //刷新数据
         mAdapter.refresh()
     }
@@ -149,7 +141,7 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
      * 刷新数据
      */
     protected fun refreshData() {
-        mVDB.smartRefreshBaseList.autoRefresh()
+        mVDB.srlBaseList.isRefreshing = true
     }
 
     /**

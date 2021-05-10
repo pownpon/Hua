@@ -2,6 +2,7 @@
 <resources>
     <!--    主题颜色-->
     <color name="topic" >#FFBCD957</color>
+    <color name="topic_2" >#FF957BCD</color>
     <color name="statuabar">#FFBCD957</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

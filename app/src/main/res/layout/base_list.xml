@@ -30,14 +30,10 @@
             android:visibility="@{isNoData?View.VISIBLE:View.GONE}" />
 
         <!--        列表层-->
-        <com.pownpon.ui.smartrefresh.SmartRefreshLayout
-            android:id="@+id/smart_refresh_base_list"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/srl_base_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <com.pownpon.ui.smartrefresh.header.material.MaterialHeader
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_base_list"
@@ -46,7 +42,7 @@
                 android:overScrollMode="never"
                 android:visibility="@{isNoData?View.INVISIBLE:View.VISIBLE}" />
 
-        </com.pownpon.ui.smartrefresh.SmartRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_content_base_list"
