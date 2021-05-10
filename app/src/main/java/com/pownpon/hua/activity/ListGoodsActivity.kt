@@ -8,18 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pownpon.hua.R
 import com.pownpon.hua.activity.base.BaseListActivity
+import com.pownpon.hua.adapter.GoodsListAdapter
 import com.pownpon.hua.adapter.base.BasePageDataAdapter
-import com.pownpon.hua.bean.entity.TestEntity
+import com.pownpon.hua.model.bean.entity.Goods
 import com.pownpon.hua.databinding.ActivityListGoodsBinding
-import com.pownpon.hua.databinding.ItemTestBinding
-import com.pownpon.hua.vm.TestAdapter
-import com.pownpon.hua.vm.VmTest
+import com.pownpon.hua.databinding.ItemGoodsBinding
+import com.pownpon.hua.vm.VmGoods
 import kotlinx.coroutines.flow.collectLatest
 
 class ListGoodsActivity :
-    BaseListActivity<TestEntity, ActivityListGoodsBinding, ItemTestBinding>() {
+    BaseListActivity<Goods, ActivityListGoodsBinding, ItemGoodsBinding>() {
 
-    private val mVM by viewModels<VmTest> {
+    private val vmGoods:VmGoods by viewModels<VmGoods> {
         ViewModelProvider.NewInstanceFactory()
     }
 
@@ -29,9 +29,15 @@ class ListGoodsActivity :
 
     override fun initTopLayout() {
         lifecycleScope.launchWhenCreated {
-            mVM.x.collectLatest {
+            vmGoods.goodsFlow .collectLatest {
                 mAdapter.submitData(it)
             }
+        }
+        mVDBList.tvTest1.setOnClickListener {
+            vmGoods.changParams( "字sdfsdfdsfds")
+        }
+        mVDBList.tvTest2.setOnClickListener {
+            vmGoods.changParams("火")
         }
     }
 
@@ -44,8 +50,8 @@ class ListGoodsActivity :
 
     }
 
-    override fun initAdapter(): BasePageDataAdapter<TestEntity, ItemTestBinding> {
-        return TestAdapter(this)
+    override fun initAdapter(): BasePageDataAdapter<Goods, ItemGoodsBinding> {
+        return GoodsListAdapter(this)
     }
 
     override fun getTitleHeight(): Int = 100

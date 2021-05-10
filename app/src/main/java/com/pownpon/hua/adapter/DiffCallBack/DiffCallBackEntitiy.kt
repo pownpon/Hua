@@ -1,7 +1,7 @@
 package com.pownpon.hua.adapter.DiffCallBack
 
 import androidx.recyclerview.widget.DiffUtil
-import com.pownpon.hua.bean.base.BaseEntity
+import com.pownpon.hua.model.bean.base.BaseEntity
 
 /**
  * Copyright (C), 2021-2030, XXX有限公司

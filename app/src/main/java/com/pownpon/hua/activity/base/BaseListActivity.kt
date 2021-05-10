@@ -5,15 +5,15 @@ import android.widget.FrameLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.pownpon.hua.R
 import com.pownpon.hua.adapter.LoadStateFootAdapter
 import com.pownpon.hua.adapter.base.BasePageDataAdapter
-import com.pownpon.hua.bean.base.BaseEntity
+import com.pownpon.hua.model.bean.base.BaseEntity
 import com.pownpon.hua.databinding.BaseListBinding
+import com.pownpon.hua.global.lc
 
 abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB : ViewDataBinding> :
     BaseActivity<BaseListBinding>(),
@@ -68,7 +68,7 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
      * 控件初始化
      */
     private fun initUI() {
-        mVDB.srlBaseList.setColorSchemeResources(R.color.topic,R.color.topic_2)
+        mVDB.srlBaseList.setColorSchemeResources(R.color.topic, R.color.topic_2)
         mVDB.srlBaseList.setProgressBackgroundColorSchemeResource(R.color.white)
         //防触摸
         mVDB.flTouchBaseList.isEnabled = true
@@ -112,9 +112,18 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
              *
              */
 
-            //加载完成
-            if (it.refresh is LoadState.NotLoading || it.refresh is LoadState.Error) {
-                mVDB.srlBaseList.isRefreshing = false
+            if (it.refresh is LoadState.Loading) {
+                mVDB.rvBaseList.scrollToPosition(0)
+                //当数据在刷新状态时，而控件没有显示刷新，则将控件显示刷新状态
+                if(!mVDB.srlBaseList.isRefreshing){
+                    mVDB.srlBaseList.isRefreshing = true
+                }
+
+            } else {
+                //当数据没有在刷新中时，而控件在刷新状态中时，将控件刷新状态结束
+                if(mVDB.srlBaseList.isRefreshing){
+                    mVDB.srlBaseList.isRefreshing = false
+                }
             }
 
             //当刷新/前加/后加 任一状态是加载中时，即正在加载数据中
@@ -122,10 +131,22 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
                 it.refresh is LoadState.Loading || it.prepend is LoadState.Loading || it.append is LoadState.Loading
             setTouchLayoutVisible(mIsDataLoading)
 
+
             var isNoData = it.refresh is LoadState.Error
-            mVDB.isNoData = isNoData
+            //当不是在刷新状态时，并且和之前村粗的值不一样时，才去改变值
+            if(it.refresh !is LoadState.Loading && mVDB.isNoData != isNoData){
+                mVDB.isNoData = isNoData
+            }
+
         }
 
+    }
+
+    /**
+     * 设置防触摸层是否可见
+     */
+    private fun setTouchLayoutVisible(visible: Boolean) {
+        mVDB.isLoading = visible
     }
 
     /*————————————————————————————————刷新监听——————————————————————————————————————————*/
@@ -135,27 +156,13 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
         mAdapter.refresh()
     }
 
-    /*————————————————————————————————给子类调用的方法——————————————————————————————————————————*/
-
-    /**
-     * 刷新数据
-     */
-    protected fun refreshData() {
-        mVDB.srlBaseList.isRefreshing = true
-    }
+    /*————————————————————————————————给子类调用或重写的方法——————————————————————————————————————————*/
 
     /**
      * 获取是否正在加载数据
      */
     protected fun isDataLoading(): Boolean {
         return mIsDataLoading
-    }
-
-    /**
-     * 设置防触摸层是否可见
-     */
-    protected fun setTouchLayoutVisible(visible: Boolean) {
-        mVDB.isLoading = visible
     }
 
     /**

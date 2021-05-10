@@ -4,14 +4,10 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
-import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.pownpon.hua.R
 import com.pownpon.hua.adapter.base.BaseViewHolder
-import com.pownpon.hua.bean.base.BaseEntity
 import com.pownpon.hua.databinding.LayoutViewholderFootBinding
 import com.pownpon.hua.exception.NoDataException
-import com.pownpon.hua.global.lc
 
 /**
  * Copyright (C), 2021-2030, XXX有限公司

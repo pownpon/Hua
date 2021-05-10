@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.paging.PagingDataAdapter
 import com.pownpon.hua.adapter.DiffCallBack.DiffCallBackEntitiy
-import com.pownpon.hua.bean.base.BaseEntity
+import com.pownpon.hua.model.bean.base.BaseEntity
 
 /**
  * Copyright (C), 2021-2030, XXX有限公司

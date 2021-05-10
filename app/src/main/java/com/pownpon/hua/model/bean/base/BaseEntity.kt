@@ -1,4 +1,4 @@
-package com.pownpon.hua.bean.base
+package com.pownpon.hua.model.bean.base
 
 /**
  * Copyright (C), 2021-2030, XXX有限公司
