@@ -14,4 +14,6 @@ data class RqGoodsList(
     var page: Int = 1,
     var pageSize: Int = 20,
     var KeyWord: String? = null
-) : BaseRequest()
+) : BaseRequest(){
+    constructor(bean:RqGoodsList):this(page = bean.page,pageSize = bean.pageSize,KeyWord = bean.KeyWord)
+}

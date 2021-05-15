@@ -10,14 +10,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".activity.LoginActivity">
 
-        <TextView
+        <fragment
+            android:id="@+id/frag_act_login"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="登录"
-            android:textSize="50sp" />
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_login" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

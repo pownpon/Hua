@@ -4,10 +4,6 @@
     <data>
 
         <variable
-            name="isLoading"
-            type="Boolean" />
-
-        <variable
             name="isNoData"
             type="Boolean" />
 
@@ -43,22 +39,6 @@
                 android:visibility="@{isNoData?View.INVISIBLE:View.VISIBLE}" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_content_base_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!--        加载防触摸层-->
-        <FrameLayout
-            android:id="@+id/fl_touch_base_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/translucent_light"
-            android:clickable="false"
-            android:visibility="@{isLoading?View.VISIBLE:View.GONE}"></FrameLayout>
 
 
     </FrameLayout>

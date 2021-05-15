@@ -1,6 +1,7 @@
 package com.pownpon.hua.activity.base
 
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -8,6 +9,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.viewpager.widget.ViewPager
 import com.pownpon.hua.R
 import com.pownpon.hua.adapter.LoadStateFootAdapter
 import com.pownpon.hua.adapter.base.BasePageDataAdapter
@@ -22,7 +24,7 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
     /**
      * 上层布局数据绑定
      */
-    protected lateinit var mVDBList: VDB
+    protected var mVDBList: VDB? = null
 
     /**
      * 是否正在加载数据中
@@ -40,12 +42,16 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
 
     final override fun initBeforeLogin() {
         //将上层布局载入到视图中
-        mVDBList = DataBindingUtil.inflate(
-            LayoutInflater.from(BaseListActivity@ this),
-            getTopLayoutId(),
-            mVDB.clContentBaseList,
-            true
-        )
+        var topLayoutId = getTopLayoutId()
+        if (null != topLayoutId) {
+            mVDBList = DataBindingUtil.inflate(
+                layoutInflater,
+                topLayoutId,
+                mVDB.root as ViewGroup,
+                true
+            )
+            mVDBList?.lifecycleOwner = BaseListActivity@ this
+        }
 
         //recyclerview设置
         mManager = initManager()
@@ -64,17 +70,7 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
         initTopLayout()
     }
 
-    /**
-     * 控件初始化
-     */
-    private fun initUI() {
-        mVDB.srlBaseList.setColorSchemeResources(R.color.topic, R.color.topic_2)
-        mVDB.srlBaseList.setProgressBackgroundColorSchemeResource(R.color.white)
-        //防触摸
-        mVDB.flTouchBaseList.isEnabled = true
-        mVDB.flTouchBaseList.isClickable = true
-        mVDB.flTouchBaseList.setOnTouchListener { _, _ -> true }
-
+    override fun initAfterLayout() {
         //重新设置列表控件的高度
         var lpSmartRefresh: FrameLayout.LayoutParams =
             mVDB.srlBaseList.layoutParams as FrameLayout.LayoutParams
@@ -86,6 +82,21 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
         lpTvNoData.topMargin = getTitleHeight()
         mVDB.tvNodataBaseList.layoutParams = lpTvNoData
     }
+
+    /**
+     * 控件初始化
+     */
+    private fun initUI() {
+        mVDB.srlBaseList.setColorSchemeResources(R.color.topic, R.color.topic_2)
+        mVDB.srlBaseList.setProgressBackgroundColorSchemeResource(R.color.white)
+
+        /*  view的post 方法会在layout之后被执行，
+        *   activity中的onResume方法执行在layout之前
+        *   还有一种方式是监听整体布局发生改变时window.decorView.viewTreeObserver.addOnGlobalLayoutListener {  }
+        *   此处只需要执行一次，所以用post
+        */
+    }
+
 
     /**
      * 设置监听
@@ -115,13 +126,13 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
             if (it.refresh is LoadState.Loading) {
                 mVDB.rvBaseList.scrollToPosition(0)
                 //当数据在刷新状态时，而控件没有显示刷新，则将控件显示刷新状态
-                if(!mVDB.srlBaseList.isRefreshing){
+                if (!mVDB.srlBaseList.isRefreshing) {
                     mVDB.srlBaseList.isRefreshing = true
                 }
 
             } else {
                 //当数据没有在刷新中时，而控件在刷新状态中时，将控件刷新状态结束
-                if(mVDB.srlBaseList.isRefreshing){
+                if (mVDB.srlBaseList.isRefreshing) {
                     mVDB.srlBaseList.isRefreshing = false
                 }
             }
@@ -129,24 +140,17 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
             //当刷新/前加/后加 任一状态是加载中时，即正在加载数据中
             mIsDataLoading =
                 it.refresh is LoadState.Loading || it.prepend is LoadState.Loading || it.append is LoadState.Loading
-            setTouchLayoutVisible(mIsDataLoading)
+            setTouchLayout(mIsDataLoading)
 
 
             var isNoData = it.refresh is LoadState.Error
             //当不是在刷新状态时，并且和之前村粗的值不一样时，才去改变值
-            if(it.refresh !is LoadState.Loading && mVDB.isNoData != isNoData){
+            if (it.refresh !is LoadState.Loading && mVDB.isNoData != isNoData) {
                 mVDB.isNoData = isNoData
             }
 
         }
 
-    }
-
-    /**
-     * 设置防触摸层是否可见
-     */
-    private fun setTouchLayoutVisible(visible: Boolean) {
-        mVDB.isLoading = visible
     }
 
     /*————————————————————————————————刷新监听——————————————————————————————————————————*/
@@ -178,7 +182,7 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
     /**
      * 获取列表上层的视图布局
      */
-    abstract fun getTopLayoutId(): Int
+    abstract fun getTopLayoutId(): Int?
 
     /**
      * 获取recyclerview的顶部距离

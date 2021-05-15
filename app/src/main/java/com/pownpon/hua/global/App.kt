@@ -1,6 +1,7 @@
 package com.pownpon.hua.global
 
 import android.app.Application
+import android.graphics.Color
 
 object App {
 
@@ -39,4 +40,14 @@ object App {
     fun getApp():Application{
         return mApp
     }
+
+    /**
+     * 获取资源字符串
+     */
+    fun getResString(resId:Int):String=   mApp.resources.getString(resId)
+
+    /**
+     * 获取资源颜色值
+     */
+    fun getResColor(resId:Int):Int=   mApp.resources.getColor(resId,null)
 }

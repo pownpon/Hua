@@ -1,6 +1,8 @@
 package com.pownpon.hua.activity
 
 
+import android.view.View
+import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -13,13 +15,14 @@ import com.pownpon.hua.adapter.base.BasePageDataAdapter
 import com.pownpon.hua.model.bean.entity.Goods
 import com.pownpon.hua.databinding.ActivityListGoodsBinding
 import com.pownpon.hua.databinding.ItemGoodsBinding
+import com.pownpon.hua.global.lc
 import com.pownpon.hua.vm.VmGoods
 import kotlinx.coroutines.flow.collectLatest
 
 class ListGoodsActivity :
     BaseListActivity<Goods, ActivityListGoodsBinding, ItemGoodsBinding>() {
 
-    private val vmGoods:VmGoods by viewModels<VmGoods> {
+    private val vmGoods: VmGoods by viewModels<VmGoods> {
         ViewModelProvider.NewInstanceFactory()
     }
 
@@ -29,15 +32,9 @@ class ListGoodsActivity :
 
     override fun initTopLayout() {
         lifecycleScope.launchWhenCreated {
-            vmGoods.goodsFlow .collectLatest {
+            vmGoods.goodsFlow.collectLatest {
                 mAdapter.submitData(it)
             }
-        }
-        mVDBList.tvTest1.setOnClickListener {
-            vmGoods.changParams( "字sdfsdfdsfds")
-        }
-        mVDBList.tvTest2.setOnClickListener {
-            vmGoods.changParams("火")
         }
     }
 
@@ -54,7 +51,18 @@ class ListGoodsActivity :
         return GoodsListAdapter(this)
     }
 
-    override fun getTitleHeight(): Int = 100
+    override fun getTitleHeight(): Int = mVDBList?.llParamsContentActListGoods?.height ?: 0
 
+
+    override fun initAfterLayout() {
+        super.initAfterLayout()
+        setPageTitle("ssss", false)
+    }
+
+    override fun onTitleClick(posision: Int) {
+    }
+
+    override fun onViewClick(view: View?) {
+    }
 
 }

@@ -9,6 +9,8 @@ buildscript {
     ext.swiperefreshlayout_version = "1.1.0"
     ext.retrofit_version = "2.9.0"
     ext.glide_version = "4.12.0"
+    ext.slidingpanelayout_version = "1.2.0-alpha01"
+    ext.navigation_version = "2.3.5"
     repositories {
         google()
         jcenter()

@@ -1,7 +1,10 @@
 package com.pownpon.hua.model.api
 
+import com.pownpon.hua.model.bean.base.BaseResponse
 import com.pownpon.hua.model.bean.response.GetListAuctionP
+import retrofit2.http.Field
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 /**
@@ -14,6 +17,21 @@ import retrofit2.http.Query
  */
 interface NetApi {
 
+    /**
+     * 获取物品列表
+     */
     @GET("/Auction/GetListAuctionP")
     suspend fun GetListAuctionP(@Query("KeyWord") keyword: String?=null): GetListAuctionP
+
+    /**
+     * 手机登录前的随机码
+     */
+    @GET("/Passport/GetSendMobieRandomToAPPCode")
+    suspend fun GetSendMobieRandomToAPPCode():String?
+
+    /**
+     * 获取手机登录验证码
+     */
+    @POST("/Passport/SendLoginMsmCodeAPP")
+    suspend fun SendLoginMsmCodeAPP(@Field("param") param:String,@Field("sign") sign:String):BaseResponse
 }

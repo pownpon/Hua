@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Hua</string>
+
+    <string name="http_err">网络休息了</string>
 </resources>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="isCode"
+            type="Boolean" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_page"
+        android:paddingLeft="@dimen/space_page"
+        android:paddingRight="@dimen/space_page">
+
+        <ImageView
+            android:id="@+id/iv_icon_frag_login_phone"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="30dp"
+            android:src="@mipmap/icon"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tv_des_frag_login_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="@dimen/space_page"
+            android:text='@{isCode?"请输入您接收到的验证码":"欢迎登录这个网站"}'
+            android:textColor="@color/font_deep"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/iv_icon_frag_login_phone" />
+
+        <EditText
+            android:id="@+id/et_phone_frag_login_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_page"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/space_page"
+            android:background="@null"
+            android:hint="请输入手机号码"
+            android:inputType="phone"
+            android:letterSpacing="0.2"
+            android:maxLength="20"
+            android:padding="12dp"
+            android:singleLine="true"
+            android:textColor="@color/font_deep"
+            android:textColorHint="@color/font_light"
+            android:textCursorDrawable="@null"
+            android:textScaleX="1.2"
+            android:textSize="@dimen/font_size_big"
+            android:visibility="@{isCode?View.GONE:View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@+id/tv_des_frag_login_phone" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:layout_marginLeft="@dimen/space_page"
+            android:layout_marginRight="@dimen/space_page"
+            android:background="@color/divider"
+            android:visibility="@{isCode?View.GONE:View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@+id/et_phone_frag_login_phone" />
+
+        <Button
+            android:id="@+id/btn_commit_frag_login_phone"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/space_page"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="@dimen/space_page"
+            android:background="@null"
+            android:gravity="center"
+            android:text="获取验证码"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_big"
+            android:visibility="@{isCode?View.GONE:View.VISIBLE}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_phone_frag_login_phone" />
+
+        <TextView
+            android:id="@+id/tv_topass_frag_login_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="用户名密码登录"
+            android:textColor="@color/font_normal"
+            android:textSize="@dimen/font_size_normal"
+            android:visibility="@{isCode?View.GONE:View.VISIBLE}"
+            app:layout_constraintLeft_toLeftOf="@+id/et_phone_frag_login_phone"
+            app:layout_constraintTop_toBottomOf="@+id/btn_commit_frag_login_phone" />
+
+        <EditText
+            android:id="@+id/et_code_frag_login_phone"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/space_page"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/space_page"
+            android:background="@null"
+            android:cursorVisible="false"
+            android:inputType="number"
+            android:maxLength="6"
+            android:textColor="@color/transparent"
+            android:textColorHint="@color/transparent"
+            android:textCursorDrawable="@null"
+            android:textSize="1px"
+            android:visibility="@{isCode?View.VISIBLE:View.GONE}"
+            app:layout_constraintTop_toBottomOf="@+id/tv_des_frag_login_phone" />
+
+        <LinearLayout
+            android:id="@+id/ll_code_content_frag_login_phone"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/space_page"
+            android:layout_marginRight="@dimen/space_page"
+            android:background="@color/bg_page"
+            android:orientation="horizontal"
+            android:visibility="@{isCode?View.VISIBLE:View.GONE}"
+            app:layout_constraintTop_toTopOf="@+id/et_code_frag_login_phone">
+
+            <TextView
+                android:id="@+id/tv_code_1_frag_login_phone"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_transparent_stroke_red"
+                android:gravity="center"
+                android:textColor="@color/font_deep"
+                android:textSize="@dimen/font_size_big" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_code_2_frag_login_phone"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_transparent_stroke_grey"
+                android:gravity="center"
+                android:textColor="@color/font_deep"
+                android:textSize="@dimen/font_size_big" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_code_3_frag_login_phone"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_transparent_stroke_grey"
+                android:gravity="center"
+                android:textColor="@color/font_deep"
+                android:textSize="@dimen/font_size_big" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_code_4_frag_login_phone"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_transparent_stroke_grey"
+                android:gravity="center"
+                android:textColor="@color/font_deep"
+                android:textSize="@dimen/font_size_big" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_code_5_frag_login_phone"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_transparent_stroke_grey"
+                android:gravity="center"
+                android:textColor="@color/font_deep"
+                android:textSize="@dimen/font_size_big" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_code_6_frag_login_phone"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_transparent_stroke_grey"
+                android:gravity="center"
+                android:textColor="@color/font_deep"
+                android:textSize="@dimen/font_size_big" />
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

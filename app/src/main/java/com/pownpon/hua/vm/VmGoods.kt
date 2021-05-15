@@ -24,19 +24,21 @@ import kotlinx.coroutines.flow.flatMapLatest
  */
 class VmGoods : BaseViewModel() {
 
-
+    /**
+     * 请求参数
+     */
     private var rqGoodsList:RqGoodsList = RqGoodsList()
 
     /**
      * 物品列表参数变化监听
      */
-    private val goodsParams: MutableStateFlow<RqGoodsList> =
+    private val goodsParamsFlow: MutableStateFlow<RqGoodsList> =
         MutableStateFlow<RqGoodsList>(rqGoodsList)
 
     /**
      * 当物品列表参数发生变化时会执行其中的变化
      */
-    val goodsFlow: Flow<PagingData<Goods>> = goodsParams.flatMapLatest {
+    val goodsFlow: Flow<PagingData<Goods>> = goodsParamsFlow.flatMapLatest {
 
         Pager<Int, Goods>(
             config = PagingConfig(
@@ -53,10 +55,8 @@ class VmGoods : BaseViewModel() {
      * 改变参数
      */
     fun changParams(key: String) {
-//        rqGoodsList.KeyWord = key
-//        var x = rqGoodsList.copy()
-//        lc("1:${rqGoodsList.hashCode()},2:${x.hashCode()}")
-        goodsParams.value = RqGoodsList(KeyWord =  key)
+        rqGoodsList.KeyWord = key
+        goodsParamsFlow.value = RqGoodsList(rqGoodsList)
     }
 
 }

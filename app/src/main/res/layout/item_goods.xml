@@ -12,30 +12,100 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:paddingLeft="@dimen/space_page"
+        android:paddingRight="@dimen/space_page">
 
-        <ImageView
-            android:id="@+id/iv"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_text_item_goods"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{model.aucTitle}"
-            app:layout_constraintLeft_toRightOf="@id/iv"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="102dp" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_tilte_item_goods"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@{model.aucCity}"
-            app:layout_constraintLeft_toRightOf="@id/iv"
-            app:layout_constraintTop_toBottomOf="@id/tv" />
+            android:paddingLeft="102dp"
+            android:singleLine="true"
+            android:text="@{model.aucTitle}"
+            android:textColor="@color/font_deep"
+            android:textSize="@dimen/font_size_big"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_seller_item_goods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:maxWidth="200dp"
+            android:singleLine="true"
+            android:text="@{model.seller}"
+            app:layout_constraintLeft_toRightOf="@+id/gl_text_item_goods"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tilte_item_goods" />
+
+        <TextView
+            android:id="@+id/tv_loc_item_goods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:singleLine="true"
+            android:text="@{model.aucPro+model.aucCity}"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_seller_item_goods"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_seller_item_goods" />
+
+        <TextView
+            android:id="@+id/tv_price_item_goods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:maxWidth="200dp"
+            android:singleLine="true"
+            android:text='@{"￥"+model.topPrice}'
+            app:layout_constraintLeft_toRightOf="@+id/gl_text_item_goods"
+            app:layout_constraintTop_toBottomOf="@+id/tv_seller_item_goods" />
+
+        <TextView
+            android:id="@+id/tv_end_item_goods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:singleLine="true"
+            android:text="剩余03天"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_price_item_goods"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_price_item_goods" />
+
+        <TextView
+            android:id="@+id/tv_pricenum_item_goods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:maxWidth="200dp"
+            android:singleLine="true"
+            android:text='@{model.priceNum+"出价"}'
+            android:textColor="@color/font_light"
+            android:textSize="@dimen/font_size_normal"
+            app:layout_constraintLeft_toRightOf="@+id/gl_text_item_goods"
+            app:layout_constraintTop_toBottomOf="@+id/tv_price_item_goods" />
+
+
+        <ImageView
+            android:id="@+id/iv_pic_item_goods"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_pricenum_item_goods"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_tilte_item_goods" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:layout_marginTop="10dp"
+            android:background="@color/divider"
+            app:layout_constraintTop_toBottomOf="@+id/tv_pricenum_item_goods" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

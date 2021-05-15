@@ -3,10 +3,17 @@
     <style name="Theme.Hua" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+
+        <!--Toolbar颜色-->
+        <item name="colorPrimary">@color/statuabar</item>
         <!-- 状态栏颜色 -->
+        <item name="colorPrimaryDark">@color/statuabar</item>
+        <!-- 状态栏颜色 ,这个会覆盖上面的，但是为了在某些版本上兼容，两个都设置-->
         <item name="android:statusBarColor">@color/statuabar</item>
-        <item name="android:windowBackground">@color/bg_page</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
 
         <item name="android:windowAnimationStyle">@style/Anim_Activity</item>
+
     </style>
 </resources>

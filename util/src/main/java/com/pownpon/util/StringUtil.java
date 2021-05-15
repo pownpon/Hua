@@ -8,7 +8,7 @@ package com.pownpon.util;
  * Description:
  * History:
  */
-class StringUtil {
+public class StringUtil {
 
     public static boolean isNullOrEnpty(String content){
         return null == content || content.isEmpty();

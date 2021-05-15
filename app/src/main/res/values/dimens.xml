@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="stroke_width">2dp</dimen>
+    <!--    页面标题啦高度-->
+    <dimen name="h_page_title">50dp</dimen>
+    <!--icon的宽高-->
+    <dimen name="wh_icon">40dp</dimen>
+    <!--页面边距-->
+    <dimen name="space_page">10dp</dimen>
+    <!--字体大小-->
+    <dimen name="font_size_normal">14sp</dimen>
+    <dimen name="font_size_big">17sp</dimen>
+    <dimen name="font_size_small">11sp</dimen>
+</resources>

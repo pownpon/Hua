@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_login"
+    app:startDestination="@id/loginByPhoneFragment">
+
+    <fragment
+        android:id="@+id/loginByPhoneFragment"
+        tools:layout="@layout/fragment_login_phone"
+        android:name="com.pownpon.hua.fragment.LoginByPhoneFragment"
+        android:label="LoginByPhoneFragment">
+        <action
+            android:id="@+id/action_loginByPhoneFragment_to_loginByPasswordFragment"
+            app:destination="@id/loginByPasswordFragment" />
+    </fragment>
+
+    <fragment
+        tools:layout="@layout/fragment_login_password"
+        android:id="@+id/loginByPasswordFragment"
+        android:name="com.pownpon.hua.fragment.LoginByPasswordFragment"
+        android:label="LoginByPasswordFragment" />
+</navigation>

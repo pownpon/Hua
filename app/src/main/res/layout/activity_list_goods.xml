@@ -7,33 +7,29 @@
 
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.ListGoodsActivity">
 
-        <TextView
-            android:id="@+id/tv_test1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
-            android:background="#369159"
-            android:padding="10dp"
-            android:text="111111111"
-            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tv_test2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
-            android:background="#369159"
-            android:padding="10dp"
-            android:text="222222"
-            android:textSize="20sp" />
+        <LinearLayout
+            android:id="@+id/ll_params_content_act_list_goods"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </RelativeLayout>
+            <TextView
+                android:gravity="center"
+                android:text="参数栏"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
