@@ -36,11 +36,11 @@ class PsGoods(private val rqGoodsList: RqGoodsList) : PagingSource<Int, Goods>()
 
             var getListAuctionP: GetListAuctionP =
                 ApiService.api.GetListAuctionP(rqGoodsList.KeyWord)
-            if (getListAuctionP.listAuctionP.isNullOrEmpty()) {
+            if (getListAuctionP.ListAuctionP.isNullOrEmpty()) {
                 LoadResult.Error(NoDataException())
             } else {
                 LoadResult.Page(
-                    data = getListAuctionP.listAuctionP ?: ArrayList<Goods>(),
+                    data = getListAuctionP.ListAuctionP ?: ArrayList<Goods>(),
                     prevKey = null,
                     nextKey = page + 1
                 )

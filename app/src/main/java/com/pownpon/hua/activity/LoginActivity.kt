@@ -19,7 +19,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 //            when (des.label) {
 //                "LoginByPhoneFragment" -> changePageTitle("手机号码登录")
 //                "LoginByPasswordFragment" -> changePageTitle("用户名密码登录")
-            lc("111：${mController.currentDestination}")
 //            }
 
         }

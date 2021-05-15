@@ -1,6 +1,5 @@
 package com.pownpon.hua.model.bean.response
 
-import com.google.gson.annotations.SerializedName
 import com.pownpon.hua.model.bean.base.BaseResponse
 import com.pownpon.hua.model.bean.entity.Goods
 import com.pownpon.hua.model.bean.entity.GoodsClass
@@ -15,11 +14,7 @@ import java.io.Serializable
  * History:
  */
 data class GetListAuctionP(
-
-    @SerializedName("ListAuctionP")
-    val listAuctionP: List<Goods>?,
-    @SerializedName("ListClass")
-    val listClass: List<GoodsClass>?,
-    @SerializedName("ClassTitle")
-    val classTitle: String?
-) :BaseResponse(), Serializable
+    val ListAuctionP: List<Goods>?,
+    val ListClass: List<GoodsClass>?,
+    val ClassTitle: String?
+) : BaseResponse(), Serializable

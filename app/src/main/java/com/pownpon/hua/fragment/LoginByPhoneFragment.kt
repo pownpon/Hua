@@ -1,12 +1,17 @@
 package com.pownpon.hua.fragment
 
+import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.map
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.Navigation
@@ -14,6 +19,8 @@ import com.pownpon.hua.R
 import com.pownpon.hua.databinding.FragmentLoginPhoneBinding
 import com.pownpon.hua.fragment.base.BaseFragment
 import com.pownpon.hua.global.lc
+import com.pownpon.hua.global.showToast
+import com.pownpon.hua.vm.VmLogin
 import com.pownpon.util.SysUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -27,6 +34,10 @@ import kotlinx.coroutines.launch
  * History:
  */
 class LoginByPhoneFragment : BaseFragment<FragmentLoginPhoneBinding>() {
+
+    private val vmLogin: VmLogin by viewModels<VmLogin> {
+        ViewModelProvider.NewInstanceFactory()
+    }
 
     /**
      * 显示验证码的textview
@@ -44,11 +55,34 @@ class LoginByPhoneFragment : BaseFragment<FragmentLoginPhoneBinding>() {
 
     override fun getLayoutResId(): Int = R.layout.fragment_login_phone
 
-    private val backPressedCallback:OnBackPressedCallback = object :OnBackPressedCallback(false){
+    private val backPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
             backInputPhone()
         }
 
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        //增加返回键监听
+        requireActivity().onBackPressedDispatcher.addCallback(
+            LoginByPhoneFragment@ this,
+            backPressedCallback
+        )
+
+        //必须放在此处监听，否则每次oncreateview时都会触发一次监听
+        vmLogin.actionResult.observe(this) {
+            if (it.success) {
+                when (it.tag) {
+                    VmLogin.Tag_GetPhoneCode -> {
+                        goInputCode()
+                    }
+                }
+            } else {
+                context?.showToast(it.errInfo ?: "")
+            }
+        }
     }
 
     override fun initBeforeLayout() {
@@ -62,8 +96,7 @@ class LoginByPhoneFragment : BaseFragment<FragmentLoginPhoneBinding>() {
         mVDB.etCodeFragLoginPhone.addTextChangedListener {
             changeCodeNumber(it?.toString())
         }
-        //增加返回键监听
-        requireActivity().onBackPressedDispatcher.addCallback(LoginByPhoneFragment@this,backPressedCallback)
+
     }
 
 
@@ -78,7 +111,8 @@ class LoginByPhoneFragment : BaseFragment<FragmentLoginPhoneBinding>() {
                     .navigate(R.id.action_loginByPhoneFragment_to_loginByPasswordFragment)
             }
             mVDB.btnCommitFragLoginPhone -> {
-                goInputCode()
+                vmLogin.startLoginByPhone(mVDB.etPhoneFragLoginPhone.text.toString())
+                SysUtil.hideSoftInput(mVDB.etPhoneFragLoginPhone)
             }
             mVDB.llCodeContentFragLoginPhone -> {
                 mVDB.etCodeFragLoginPhone.requestFocus()
@@ -94,7 +128,7 @@ class LoginByPhoneFragment : BaseFragment<FragmentLoginPhoneBinding>() {
      * 输入手机号码
      */
     private fun backInputPhone() {
-        backPressedCallback.isEnabled  =false
+        backPressedCallback.isEnabled = false
         mVDB.isCode = false
         mVDB.etPhoneFragLoginPhone.requestFocus()
         mVDB.etPhoneFragLoginPhone.text = null
@@ -109,7 +143,7 @@ class LoginByPhoneFragment : BaseFragment<FragmentLoginPhoneBinding>() {
      * 输入验证码
      */
     private fun goInputCode() {
-        backPressedCallback.isEnabled  =true
+        backPressedCallback.isEnabled = true
         mVDB.isCode = true
         mVDB.etCodeFragLoginPhone.requestFocus()
         mVDB.etCodeFragLoginPhone.text = null

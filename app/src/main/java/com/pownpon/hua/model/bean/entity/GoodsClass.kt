@@ -1,6 +1,5 @@
 package com.pownpon.hua.model.bean.entity
 
-import com.google.gson.annotations.SerializedName
 import com.pownpon.hua.model.bean.base.BaseEntity
 import java.io.Serializable
 
@@ -13,22 +12,13 @@ import java.io.Serializable
  * History:
  */
 data class GoodsClass(
-    @SerializedName("AutoId")
-    val autoId: Int,
-    @SerializedName("ClassId")
-    val classId: Int,
-    @SerializedName("Title")
-    val title: String?,
-    @SerializedName("ParentId")
-    val parentId: Int,
-    @SerializedName("MenuNum")
-    val menuNum: Int,
-    @SerializedName("ChidNum")
-    val chidNum: Int,
-    @SerializedName("IdPath")
-    val idPath: String?,
-    @SerializedName("TitlePath")
-    val titlePath: String?,
-    @SerializedName("imgPath")
+    val AutoId: Int,
+    val ClassId: Int,
+    val Title: String?,
+    val ParentId: Int,
+    val MenuNum: Int,
+    val ChidNum: Int,
+    val IdPath: String?,
+    val TitlePath: String?,
     val imgPath: String?
-) :BaseEntity(autoId), Serializable
+) : BaseEntity(AutoId), Serializable

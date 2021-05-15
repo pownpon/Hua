@@ -50,4 +50,5 @@ object App {
      * 获取资源颜色值
      */
     fun getResColor(resId:Int):Int=   mApp.resources.getColor(resId,null)
+
 }

@@ -1,6 +1,8 @@
 package com.pownpon.hua.global
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import kotlin.reflect.KClass
 
 /**
@@ -18,11 +20,19 @@ import kotlin.reflect.KClass
 fun Any.lc(logContent: String) {
     Log.e(this.javaClass.name, logContent)
 }
+
 /**
  * 任意对象的日志扩展函数
  */
 fun Any.lc() {
     Log.e(this.javaClass.name, "${this.hashCode()}___${System.currentTimeMillis()}")
+}
+
+/**
+ * 显示toast
+ */
+fun Context.showToast(content: String) {
+    Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
 }
 
 

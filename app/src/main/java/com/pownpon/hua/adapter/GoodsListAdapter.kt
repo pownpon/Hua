@@ -22,7 +22,7 @@ class GoodsListAdapter(context: Context):BasePageDataAdapter<Goods,ItemGoodsBind
         var model = getItem(position)
         holder.apply {
             Glide.with(mVDB.root)
-                .load(model?.midSrc)
+                .load(model?.MidSrc)
                 .into(mVDB.ivPicItemGoods)
             mVDB.model = model
         }

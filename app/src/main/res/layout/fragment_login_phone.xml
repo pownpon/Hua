@@ -133,7 +133,7 @@
 
             <TextView
                 android:id="@+id/tv_code_1_frag_login_phone"
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:background="@drawable/bg_transparent_stroke_red"
                 android:gravity="center"
@@ -147,7 +147,7 @@
 
             <TextView
                 android:id="@+id/tv_code_2_frag_login_phone"
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:background="@drawable/bg_transparent_stroke_grey"
                 android:gravity="center"
@@ -161,7 +161,7 @@
 
             <TextView
                 android:id="@+id/tv_code_3_frag_login_phone"
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:background="@drawable/bg_transparent_stroke_grey"
                 android:gravity="center"
@@ -175,7 +175,7 @@
 
             <TextView
                 android:id="@+id/tv_code_4_frag_login_phone"
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:background="@drawable/bg_transparent_stroke_grey"
                 android:gravity="center"
@@ -189,7 +189,7 @@
 
             <TextView
                 android:id="@+id/tv_code_5_frag_login_phone"
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:background="@drawable/bg_transparent_stroke_grey"
                 android:gravity="center"
@@ -203,7 +203,7 @@
 
             <TextView
                 android:id="@+id/tv_code_6_frag_login_phone"
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:background="@drawable/bg_transparent_stroke_grey"
                 android:gravity="center"

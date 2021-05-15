@@ -1,6 +1,5 @@
 package com.pownpon.hua.model.bean.base
 
-import com.google.gson.JsonParseException
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -12,26 +11,20 @@ import org.json.JSONObject
  * Description:
  * History:
  */
-open class BaseResponse(val success: Boolean, val errinfo: String?) {
+open class BaseResponse(val success: Boolean, val errinfo: Map<String, String>?) {
 
     constructor() : this(true, null)
 
     /**
      * 获取错误显示信息
      */
-    fun getErrInfo(): String? {
-        try {
-            if (success || errinfo.isNullOrEmpty()) {
-                return null
-            }
-            var jsonObject: JSONObject = JSONObject(errinfo)
-            var keys: Iterator<String> = jsonObject.keys()
-            while (keys.hasNext()) {
-                return@getErrInfo jsonObject.getString(keys.next())
-            }
-            return null
-        } catch (e: JsonParseException) {
+    fun showErrInfo(): String? {
+        if (success || null == errinfo || errinfo.isEmpty()) {
             return null
         }
+        for (item in errinfo) {
+            return@showErrInfo item.value
+        }
+        return null
     }
 }
