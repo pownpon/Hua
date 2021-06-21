@@ -8,5 +8,5 @@ package com.pownpon.hua.model.bean.entity
  * Description: VM的动作结果，带数据
  * History:
  */
-class VmActionDataResult<T>(tag: Int, success: Boolean, errInfo: String?, val data: T) :
+class VmActionDataResult<T>(tag: Int, success: Boolean, errInfo: String?, val data: T? = null) :
     VmActionResult(tag, success, errInfo)

@@ -1,5 +1,6 @@
 package com.pownpon.hua.activity.base
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -40,7 +41,7 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
         return R.layout.base_list
     }
 
-    final override fun initBeforeLogin() {
+    override fun initPageData(savedInstanceState: Bundle?) {
         //将上层布局载入到视图中
         var topLayoutId = getTopLayoutId()
         if (null != topLayoutId) {
@@ -52,6 +53,9 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
             )
             mVDBList?.lifecycleOwner = BaseListActivity@ this
         }
+    }
+
+    final override fun initPageView() {
 
         //recyclerview设置
         mManager = initManager()
@@ -61,42 +65,33 @@ abstract class BaseListActivity<T : BaseEntity, VDB : ViewDataBinding, ItemVDB :
             mAdapter.withLoadStateFooter(LoadStateFootAdapter(BaseListActivity@ this) { mAdapter.retry() })
         concatTopAdadpter(concatAdapter)
         mVDB.rvBaseList.adapter = concatAdapter
-
-        initUI()
+        //刷新控件设置
+        mVDB.srlBaseList.setColorSchemeResources(R.color.topic, R.color.topic_2)
+        mVDB.srlBaseList.setProgressBackgroundColorSchemeResource(R.color.white)
 
         registListener()
 
-        //加载子类的最上层布局
+        //初始化的最上层布局
         initTopLayout()
+
+        setListTopMargin(getTitleHeight())
     }
 
-    override fun initAfterLayout() {
+    /**
+     * 设置列表顶部距离
+     */
+    protected fun setListTopMargin(margin:Int){
         //重新设置列表控件的高度
         var lpSmartRefresh: FrameLayout.LayoutParams =
             mVDB.srlBaseList.layoutParams as FrameLayout.LayoutParams
-        lpSmartRefresh.topMargin = getTitleHeight()
+        lpSmartRefresh.topMargin = margin
         mVDB.srlBaseList.layoutParams = lpSmartRefresh
 
         var lpTvNoData: FrameLayout.LayoutParams =
             mVDB.tvNodataBaseList.layoutParams as FrameLayout.LayoutParams
-        lpTvNoData.topMargin = getTitleHeight()
+        lpTvNoData.topMargin = margin
         mVDB.tvNodataBaseList.layoutParams = lpTvNoData
     }
-
-    /**
-     * 控件初始化
-     */
-    private fun initUI() {
-        mVDB.srlBaseList.setColorSchemeResources(R.color.topic, R.color.topic_2)
-        mVDB.srlBaseList.setProgressBackgroundColorSchemeResource(R.color.white)
-
-        /*  view的post 方法会在layout之后被执行，
-        *   activity中的onResume方法执行在layout之前
-        *   还有一种方式是监听整体布局发生改变时window.decorView.viewTreeObserver.addOnGlobalLayoutListener {  }
-        *   此处只需要执行一次，所以用post
-        */
-    }
-
 
     /**
      * 设置监听

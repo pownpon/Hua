@@ -14,30 +14,17 @@ import com.pownpon.hua.global.lc
 class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
 
-    private val mNavigationListener: NavController.OnDestinationChangedListener =
-        NavController.OnDestinationChangedListener { _, des, _ ->
-//            when (des.label) {
-//                "LoginByPhoneFragment" -> changePageTitle("手机号码登录")
-//                "LoginByPasswordFragment" -> changePageTitle("用户名密码登录")
-//            }
-
-        }
-
-    private lateinit var mController: NavController
-
-    override fun initBeforeLogin() {
-        //增加监听
-        mController = Navigation.findNavController(LoginActivity@ this, R.id.frag_act_login)
-        mController.addOnDestinationChangedListener(mNavigationListener)
+    override fun initPageData(savedInstanceState: Bundle?) {
 
     }
 
-    override fun initAfterLogin() {
-    }
-
-    override fun initAfterLayout() {
+    override fun initPageView() {
         setPageTitle(null, false)
         window.statusBarColor = resources.getColor(R.color.bg_page,null)
+    }
+
+    override fun startLoadData() {
+
     }
 
     override fun getLayoutId(): Int = R.layout.activity_login
@@ -50,10 +37,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
     override fun enableSlideBack(): Boolean = false
 
-    override fun onDestroy() {
-        super.onDestroy()
-        //移除监听
-        mController.removeOnDestinationChangedListener(mNavigationListener)
-    }
+
 
 }

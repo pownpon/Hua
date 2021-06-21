@@ -1,14 +1,13 @@
 package com.pownpon.hua.activity
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.lifecycleScope
 import com.pownpon.hua.listener.NoDoubleClickListener
 import com.pownpon.hua.R
 import com.pownpon.hua.activity.base.BaseActivity
 import com.pownpon.hua.databinding.ActivityMainBinding
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import com.pownpon.hua.web.WebActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
@@ -16,23 +15,36 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         return R.layout.activity_main
     }
 
-    override fun initBeforeLogin() {
-        mVDB.tvActMainStart.setOnClickListener(object : NoDoubleClickListener() {
+    override fun initPageData(savedInstanceState: Bundle?) {
+        //主Act启动的时候，先直接启动到广告页面
+        startActivity(Intent(this@MainActivity, GgActivity::class.java))
+
+    }
+
+    override fun initPageView() {
+        setPageTitle("xxxx", false, R.mipmap.icon)
+
+        mVDB.tv1.setOnClickListener(object : NoDoubleClickListener() {
             override fun click(v: View?) {
-                startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                startActivity(Intent(this@MainActivity, ListGoodsActivity::class.java))
+            }
+        })
+        mVDB.tv2.setOnClickListener(object : NoDoubleClickListener() {
+            override fun click(v: View?) {
+                startActivity(Intent(this@MainActivity, WebActivity::class.java))
             }
 
         })
+        mVDB.tv3.setOnClickListener(object : NoDoubleClickListener() {
+            override fun click(v: View?) {
+                startActivity(Intent(this@MainActivity, GgActivity::class.java))
+            }
 
-
+        })
     }
 
-    override fun initAfterLogin() {
+    override fun startLoadData() {
 
-    }
-
-    override fun initAfterLayout() {
-        setPageTitle("xxxx", false, R.mipmap.icon)
     }
 
     override fun onTitleClick(posision: Int) {

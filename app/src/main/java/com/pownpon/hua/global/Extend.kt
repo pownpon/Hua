@@ -1,8 +1,11 @@
 package com.pownpon.hua.global
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import com.pownpon.hua.activity.base.BaseActivity
+import java.lang.reflect.Field
 import kotlin.reflect.KClass
 
 /**
@@ -34,6 +37,7 @@ fun Any.lc() {
 fun Context.showToast(content: String) {
     Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
 }
+
 
 
 

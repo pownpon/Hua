@@ -78,6 +78,9 @@ class LoginByPhoneFragment : BaseFragment<FragmentLoginPhoneBinding>() {
                     VmLogin.Tag_GetPhoneCode -> {
                         goInputCode()
                     }
+                    VmLogin.Tag_LoginByPhoneCode -> {
+                        context?.showToast("登录成功")
+                    }
                 }
             } else {
                 context?.showToast(it.errInfo ?: "")
@@ -89,14 +92,18 @@ class LoginByPhoneFragment : BaseFragment<FragmentLoginPhoneBinding>() {
 
         setClick(
             mVDB.tvTopassFragLoginPhone,
-            mVDB.btnCommitFragLoginPhone,
-            mVDB.llCodeContentFragLoginPhone
+            mVDB.tvCommitFragLoginPhone,
+            mVDB.llCodeContentFragLoginPhone,
+            mVDB.ivBackFragLoginPhone
         )
         //增加验证码输入监听
         mVDB.etCodeFragLoginPhone.addTextChangedListener {
             changeCodeNumber(it?.toString())
         }
-
+        mVDB.etPhoneFragLoginPhone.addTextChangedListener {
+            mVDB.tvCommitFragLoginPhone.isEnabled = !it.isNullOrEmpty()
+        }
+        vmLogin.getLoginSta()
     }
 
 
@@ -110,14 +117,16 @@ class LoginByPhoneFragment : BaseFragment<FragmentLoginPhoneBinding>() {
                 Navigation.findNavController(clickView!!)
                     .navigate(R.id.action_loginByPhoneFragment_to_loginByPasswordFragment)
             }
-            mVDB.btnCommitFragLoginPhone -> {
+            mVDB.tvCommitFragLoginPhone -> {
                 vmLogin.startLoginByPhone(mVDB.etPhoneFragLoginPhone.text.toString())
                 SysUtil.hideSoftInput(mVDB.etPhoneFragLoginPhone)
             }
             mVDB.llCodeContentFragLoginPhone -> {
                 mVDB.etCodeFragLoginPhone.requestFocus()
                 SysUtil.showSoftInput(mVDB.etCodeFragLoginPhone)
-
+            }
+            mVDB.ivBackFragLoginPhone -> {
+                activity?.finish()
             }
         }
 
@@ -174,7 +183,8 @@ class LoginByPhoneFragment : BaseFragment<FragmentLoginPhoneBinding>() {
         }
 
         if (redIndex >= tvCodes.size) {
-            lc("提交登录")
+            //进行登录
+            vmLogin.loginByPhoneCode(mVDB.etCodeFragLoginPhone.text.toString())
         }
     }
 }

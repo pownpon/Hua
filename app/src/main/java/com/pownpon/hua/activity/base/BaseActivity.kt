@@ -17,12 +17,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.pownpon.hua.R
+import com.pownpon.hua.activity.GgActivity
 import com.pownpon.hua.activity.LoginActivity
 import com.pownpon.hua.global.App
+import com.pownpon.hua.global.Constans
 import com.pownpon.hua.global.lc
 import com.pownpon.hua.listener.NoDoubleClickListener
 
-abstract class BaseActivity<VDB : ViewDataBinding> : AppCompatActivity(),
+abstract class BaseActivity<VDB : ViewDataBinding> : TopBaseActivity(),
     SlidingPaneLayout.PanelSlideListener {
 
     /* -------------------    成员变量  -------------- */
@@ -49,6 +51,9 @@ abstract class BaseActivity<VDB : ViewDataBinding> : AppCompatActivity(),
 
     private lateinit var mTitleImgs: Array<ImageView>
     private lateinit var mTitleView: View
+    private val mTvTitle: TextView by lazy {
+        findViewById<TextView>(R.id.tv_title_base_layout)
+    }
 
     private val mClickListener: ClickListener = ClickListener()
 
@@ -59,29 +64,42 @@ abstract class BaseActivity<VDB : ViewDataBinding> : AppCompatActivity(),
 
         initView()
 
-        //先进行不需要登录就可进行的初始化
-        initBeforeLogin()
-        //在需要进行登录，并且已经登录的前提下进行需要登录后的初始化
-        if (needLogin()) {
-            if (App.isLogin()) {
-                initAfterLogin()
-            } else {
-                //启动到LoginAcvitiy
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                    if (RESULT_OK != it.resultCode) {
-                        finish()
-                    }
-                }.launch(Intent(BaseActivity@ this, LoginActivity::class.java))
-            }
+        initPageData(savedInstanceState)
+
+        //在需要进行登录，而又没有进行登录，跳转到登录页面
+        if (needLogin() && !App.isLogin()) {
+            //启动到LoginAcvitiy
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (RESULT_OK != it.resultCode) {
+                    finish()
+                } else {
+                    startLoadData()
+                }
+            }.launch(Intent(BaseActivity@ this, LoginActivity::class.java))
+
         }
 
+        /*  view的post 方法会在layout之后被执行，
+        *   activity中的onResume方法执行在layout之前
+        *   还有一种方式是监听整体布局发生改变时window.decorView.viewTreeObserver.addOnGlobalLayoutListener {  }
+        *   此处只需要执行一次，所以用post
+        */
         mContentView.post {
+            lc("layoutcomplete")
             //获取状态栏高度
             var rect: Rect = Rect()
             window.decorView.getWindowVisibleDisplayFrame(rect)
             mStatusHeight = rect.top
 
-            initAfterLayout()
+            initPageView()
+
+            if(needLogin()){
+                if(App.isLogin()){
+                    startLoadData()
+                }
+            }else{
+                startLoadData()
+            }
         }
     }
 
@@ -161,7 +179,7 @@ abstract class BaseActivity<VDB : ViewDataBinding> : AppCompatActivity(),
      * 设置点击监听
      */
     protected fun setOnClick(vararg views: View) {
-        for(v in views){
+        for (v in views) {
             v.setOnClickListener(mClickListener)
         }
 
@@ -206,7 +224,7 @@ abstract class BaseActivity<VDB : ViewDataBinding> : AppCompatActivity(),
      * 改变页面标题
      */
     protected fun changePageTitle(title: String) {
-        findViewById<TextView>(R.id.tv_title_base_layout).text = title
+        mTvTitle.text = title
     }
 
     /***
@@ -231,19 +249,19 @@ abstract class BaseActivity<VDB : ViewDataBinding> : AppCompatActivity(),
     /* -------------------    子类必须重写的方法  -------------- */
 
     /**
-     * 不需要登录就可以进行的初始化工作
+     * 初始化页面的数据
      */
-    abstract fun initBeforeLogin()
+    abstract fun initPageData(savedInstanceState: Bundle?)
 
     /**
-     * 必须在登录后才能进行的初始化工作
+     * 初始化页面视图
      */
-    abstract fun initAfterLogin()
+    abstract fun initPageView()
 
     /**
-     * 当布局加载完成后做的初始化工作
+     * 开始加载页面数据
      */
-    abstract fun initAfterLayout()
+    abstract fun startLoadData()
 
     /**
      * 当标题栏点击

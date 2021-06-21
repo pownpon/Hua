@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pownpon.hua">
-
-    <!--    网络权限-->
+    <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -13,9 +12,22 @@
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="false"
         android:theme="@style/Theme.Hua">
-        <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".web.WebActivity"></activity>
+        <activity
+            android:name=".activity.GgActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.FullScreen" />
+        <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.ListGoodsActivity" />
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.SplashActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FullScreen"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

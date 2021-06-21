@@ -2,6 +2,7 @@ package com.pownpon.hua.model.api
 
 import com.pownpon.hua.model.bean.base.BaseResponse
 import com.pownpon.hua.model.bean.response.GetListAuctionP
+import com.pownpon.hua.model.bean.response.LoginByUsername
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -24,11 +25,18 @@ interface NetApi {
     @GET("/Auction/GetListAuctionP")
     suspend fun GetListAuctionP(@Query("KeyWord") keyword: String? = null): GetListAuctionP
 
+
+    /**
+     * 获取当前登录状态
+     */
+    @GET("/Passport/GetUserLoginSta")
+    suspend fun GetUserLoginSta(): ResponseBody
+
     /**
      * 手机登录前的随机码
      */
     @GET("/Passport/GetSendMobieRandomToAPPCode")
-    suspend fun GetSendMobieRandomToAPPCode(): ResponseBody?
+    suspend fun GetSendMobieRandomToAPPCode(): ResponseBody
 
     /**
      * 获取手机登录验证码
@@ -39,4 +47,25 @@ interface NetApi {
         @Field("param") param: String,
         @Field("sign") sign: String
     ): BaseResponse
+
+    /**
+     * 手机验证码登录
+     */
+    @FormUrlEncoded
+    @POST("/Passport/LoginMsmCode")
+    suspend fun LoginMsmCode(
+        @Field("txtphone") phone: String,
+        @Field("txtphonecode") code: String
+    ): BaseResponse
+
+    /**
+     * 用户名密码登录
+     */
+    @FormUrlEncoded
+    @POST("/Passport/Login")
+    suspend fun LoginUserName(
+        @Field("username") name: String,
+        @Field("password") psd: String,
+        @Field("code") code: String = ""
+    ): LoginByUsername
 }

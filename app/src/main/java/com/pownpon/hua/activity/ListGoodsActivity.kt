@@ -1,6 +1,7 @@
 package com.pownpon.hua.activity
 
 
+import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import androidx.activity.viewModels
@@ -31,11 +32,7 @@ class ListGoodsActivity :
     }
 
     override fun initTopLayout() {
-        lifecycleScope.launchWhenCreated {
-            vmGoods.goodsFlow.collectLatest {
-                mAdapter.submitData(it)
-            }
-        }
+        setPageTitle("ssss", false)
     }
 
 
@@ -43,26 +40,30 @@ class ListGoodsActivity :
         return LinearLayoutManager(ListGoodsActivity@ this)
     }
 
-    override fun initAfterLogin() {
-
-    }
-
     override fun initAdapter(): BasePageDataAdapter<Goods, ItemGoodsBinding> {
         return GoodsListAdapter(this)
     }
 
+    override fun initPageData(savedInstanceState: Bundle?) {
+        super.initPageData(savedInstanceState)
+    }
+
+
     override fun getTitleHeight(): Int = mVDBList?.llParamsContentActListGoods?.height ?: 0
 
-
-    override fun initAfterLayout() {
-        super.initAfterLayout()
-        setPageTitle("ssss", false)
-    }
 
     override fun onTitleClick(posision: Int) {
     }
 
     override fun onViewClick(view: View?) {
+    }
+
+    override fun startLoadData() {
+        lifecycleScope.launchWhenCreated {
+            vmGoods.goodsFlow.collectLatest {
+                mAdapter.submitData(it)
+            }
+        }
     }
 
 }

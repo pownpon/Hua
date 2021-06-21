@@ -6,4 +6,5 @@
         <item name="android:activityCloseEnterAnimation">@anim/translate_in_from_left</item>
         <item name="android:activityCloseExitAnimation">@anim/translate_out_to_right</item>
     </style>
+
 </resources>
