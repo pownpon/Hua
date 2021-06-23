@@ -8,6 +8,7 @@ import com.pownpon.hua.R
 import com.pownpon.hua.activity.base.BaseActivity
 import com.pownpon.hua.databinding.ActivityMainBinding
 import com.pownpon.hua.web.WebActivity
+import com.pownpon.picture.picker.PickPictureActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
@@ -37,7 +38,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         })
         mVDB.tv3.setOnClickListener(object : NoDoubleClickListener() {
             override fun click(v: View?) {
-                startActivity(Intent(this@MainActivity, GgActivity::class.java))
+                startActivity(Intent(this@MainActivity, PickPictureActivity::class.java))
             }
 
         })

@@ -24,7 +24,7 @@ abstract class TopBaseActivity : AppCompatActivity(){
         /**
          * act最后暂停的时间
          */
-        var lastActPauseTime: Long = 0
+        var lastActPauseTime: Long = System.currentTimeMillis()
             private set
     }
 
@@ -43,9 +43,6 @@ abstract class TopBaseActivity : AppCompatActivity(){
 
     override fun onResume() {
         super.onResume()
-        lc("is__${!App.isView()}")
-        lc("is__${lastActPauseTime}")
-        lc("is__${System.currentTimeMillis() - lastActPauseTime}")
 
         showTag = Constans.actShowResume
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="black_deep">#FF121212</color>
+    <color name="black">#FF333333</color>
+    <color name="transparent">#00000000</color>
+</resources>
