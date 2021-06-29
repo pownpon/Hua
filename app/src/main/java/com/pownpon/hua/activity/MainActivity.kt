@@ -18,7 +18,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun initPageData(savedInstanceState: Bundle?) {
         //主Act启动的时候，先直接启动到广告页面
-        startActivity(Intent(this@MainActivity, GgActivity::class.java))
+        //startActivity(Intent(this@MainActivity, GgActivity::class.java))
 
     }
 

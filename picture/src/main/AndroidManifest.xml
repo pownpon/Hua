@@ -3,13 +3,14 @@
     package="com.pownpon.picture">
 
     <application>
-
+        <activity
+            android:name=".picker.ViewPictureActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/BlackActvity"></activity>
         <activity
             android:name=".picker.PickPictureActivity"
             android:launchMode="singleTask"
-            android:theme="@style/BlackActvity">
-
-        </activity>
+            android:theme="@style/BlackActvity"></activity>
     </application>
 
 </manifest>

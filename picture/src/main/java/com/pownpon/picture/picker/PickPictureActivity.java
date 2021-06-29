@@ -2,14 +2,23 @@ package com.pownpon.picture.picker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pownpon.picture.R;
+import com.pownpon.picture.util.PictureLoader;
 import com.pownpon.picture.util.PictureUtil;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,17 +26,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class PickPictureActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private final int RequestPermissionCode = 99;
+    private final String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+
     private RecyclerView rvPicture, rvDir;
     private ImageView ivBack, ivChoose;
     private TextView tvTitle, tvSure, tvDir, tvChoose, tvView;
     private AdapterPicture mAdapterPicture;
-    private Map<String, List<String>> mPics;
+    private Map<String, ArrayList<BeanPicture>> mPics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +48,38 @@ public class PickPictureActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_pick_picture);
         findView();
         initView();
-        tvTitle.post(new Runnable() {
-            @Override
-            public void run() {
-                getPictureData();
+        checkPermission(true);
+    }
+
+    /**
+     * 检查权限
+     */
+    private void checkPermission(boolean request) {
+        if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this, permissions[0])
+                || PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this, permissions[1])) {
+            if (request) {
+                ActivityCompat.requestPermissions(this, permissions, RequestPermissionCode);
+            } else {
+                Toast.makeText(this, "您没有授权", Toast.LENGTH_SHORT).show();
             }
-        });
+        } else {
+            getPictureData();
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == RequestPermissionCode){
+            checkPermission(false);
+        }
     }
 
     /**
      * 获取图片数据
      */
     private void getPictureData() {
-        mPics = PictureUtil.queryPicture(this);
+        mPics = PictureUtil.queryPictureBean(this);
         if (null == mPics || mPics.size() <= 0) {
             Toast.makeText(this, "没有图片哦", Toast.LENGTH_SHORT).show();
             tvTitle.postDelayed(
@@ -63,16 +95,24 @@ public class PickPictureActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void changePicList(String key) {
-        List<BeanPicture> data = new ArrayList<>();
-        for (String item : mPics.get(key)) {
-            data.add(new BeanPicture(item));
-        }
-        mAdapterPicture.refresh(data);
+        mAdapterPicture.refresh(mPics.get(key));
     }
 
     @Override
     public void onClick(View v) {
+        if (v == ivBack) {
+            finish();
+        } else if (v == tvView) {
+            Intent intentView = new Intent(this, ViewPictureActivity.class);
+            intentView.putParcelableArrayListExtra(ViewPictureActivity.INTENT_KEY_PICS, mPics.get(PictureUtil.KeyAll));
+            startActivity(intentView);
+        }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PictureLoader.cancel(null);
     }
 
     /**
